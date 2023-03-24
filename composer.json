@@ -1,0 +1,17 @@
+{
+    "name": "bruna/formulaone",
+    "description": "modelagem do dominio da f1",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Bruna\\FormulaOne\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bruna",
+            "email": "brunamelo.sa@gmail.com"
+        }
+    ],
+    "require": {}
+}
