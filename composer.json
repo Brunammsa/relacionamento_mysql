@@ -13,5 +13,7 @@
             "email": "brunamelo.sa@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "symfony/dotenv": "^6.2"
+    }
 }
