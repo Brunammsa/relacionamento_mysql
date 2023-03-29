@@ -31,11 +31,11 @@ class Team
 
     public function getCountryId(): string
     {
-        return $this->country;
+        return $this->country_id;
     }
 
     public function getQtdWorldTitles(): int
     {
-        return $this->getQtdWorldTitles;
+        return $this->qtdWorldTitles;
     }
 };

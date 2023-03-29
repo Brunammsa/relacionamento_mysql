@@ -7,7 +7,7 @@ use Bruna\FormulaOne\Domain\Team;
 use Bruna\FormulaOne\Domain\Country;
 use PDO;
 
-class RepositorioSql
+class RepositorySql
 {
     public function __construct(private PDO $connection)
     {
@@ -60,7 +60,7 @@ class RepositorioSql
         ]);
     }
 
-    public function listaPilotos(): array
+    public function listaDePilotos(): array
     {
         $sqlQuery = 'SELECT d.name, t.name FROM driver AS d JOIN team AS t ON t.id=d.team_id;';
         $statement = $this->connection->query($sqlQuery);
@@ -74,4 +74,16 @@ class RepositorioSql
 
         return $listaPilotos;
     }
+
+    public function localizandoPais($pais): ?int
+    {
+        $sqlQuery = "SELECT id FROM country WHERE name ='$pais'";
+        $statement = $this->connection->query($sqlQuery);
+        $sucess = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $idDoPais = $sucess['id'];
+
+        return $idDoPais;
+    }
+
 }
