@@ -5,7 +5,6 @@ namespace Bruna\FormulaOne\Repository;
 use Bruna\FormulaOne\Domain\Driver;
 use Bruna\FormulaOne\Domain\Team;
 use Bruna\FormulaOne\Domain\Country;
-
 use PDO;
 
 class RepositorioSql
@@ -61,8 +60,18 @@ class RepositorioSql
         ]);
     }
 
-    public function listaPilotosComEquipe(): void
+    public function listaPilotos(): array
     {
+        $sqlQuery = 'SELECT d.name, t.name FROM driver AS d JOIN team AS t ON t.id=d.team_id;';
+        $statement = $this->connection->query($sqlQuery);
+        $resultado = $statement->fetchAll();
 
+        $listaPilotos = [];
+
+        foreach ($resultado as $resultadoPilotos) {
+            $listaPilotos[] = $resultadoPilotos;
+        }
+
+        return $listaPilotos;
     }
 }

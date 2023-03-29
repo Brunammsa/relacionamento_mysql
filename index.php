@@ -3,7 +3,7 @@
 require_once "vendor/autoload.php";
 
 use Bruna\FormulaOne\Persistence\ConnectionCreator;
-use Bruna\FormulaOne\Repositorio\RepositorioSql;
+use Bruna\FormulaOne\Repository\RepositorioSql;
 use Bruna\FormulaOne\Domain\Country;
 use Bruna\FormulaOne\Domain\Driver;
 use Bruna\FormulaOne\Domain\Team;
@@ -39,7 +39,10 @@ function menu(): void
 
 function inserirEquipe()
 {
+    $pdo = ConnectionCreator::createConnection();
+    $repositorio = new RepositorioSql($pdo);
     $nomeValido = false;
+
     while ($nomeValido == false) {
         $nomeEquipe = readline(('Qual o nome da equipe? '));
         $nomeValido = true;
@@ -93,13 +96,25 @@ function inserirEquipe()
             $qtdWordTitlesValid = false;
         }
     }
+
+
+    try {
+        $equipe = new Team($nomeEquipe, $qtdEmployees, $nomeDiretor, $countryName, $qtdWordTitles);
+        $repositorio->armazenaTeam($equipe);
+        echo "equipe $nomeEquipe inserida com sucesso!" . PHP_EOL;
+    } catch (InvalidArgumentException $exception) {
+        echo $exception->getMessage() . PHP_EOL;
+    }
     echo "\n";
 
 }
 
 function inserirPiloto()
 {
+    $pdo = ConnectionCreator::createConnection();
+    $repositorio = new RepositorioSql($pdo);
     $nomeValido = false;
+
     while ($nomeValido == false) {
         $nomePiloto = readline(('Qual o nome do piloto? '));
         $nomeValido = true;
@@ -142,12 +157,23 @@ function inserirPiloto()
             $countryValid = false;
         }
     }
+
+    try {
+        $piloto = new Driver($nomePiloto, $nomeEquipe, $nascimento, $countryName);
+        $repositorio->armazenaDriver($piloto);
+        echo "piloto $nomePiloto inserido com sucesso!" . PHP_EOL;
+    } catch (InvalidArgumentException $exception) {
+        echo $exception->getMessage() . PHP_EOL;
+    }
     echo "\n";
 }
 
 function inserirPais()
 {
+    $pdo = ConnectionCreator::createConnection();
+    $repositorio = new RepositorioSql($pdo);
     $countryValid = false;
+
     while ($countryValid == false) {
         $countryName = readline(('Qual país gostaria de adicionar? '));
         $countryValid = true;
@@ -157,6 +183,14 @@ function inserirPais()
             $countryValid = false;
         }
     }
+
+    try {
+        $country = new Country($countryName);
+        $repositorio->armazenaCountry($country);
+        echo "país $nomePiloto inserido com sucesso!" . PHP_EOL;
+    } catch (InvalidArgumentException $exception) {
+        echo $exception->getMessage() . PHP_EOL;
+    }
     echo "\n";
 }
 
@@ -164,9 +198,9 @@ function listarPilotosComEquipes()
 {
     $pdo = ConnectionCreator::createConnection();
     $repositorio = new RepositorioSql($pdo);
-    $listaPilotos = $repositorio->listar();
+    $listaDePilotos = $repositorio->listaPilotos();
 
-    foreach ($listaPilotos as $linha) {
+    foreach ($listaDePilotos as $linha) {
         echo $linha . PHP_EOL;
     } 
 }
