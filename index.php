@@ -8,6 +8,7 @@ use Bruna\FormulaOne\Domain\Country;
 use Bruna\FormulaOne\Domain\Driver;
 use Bruna\FormulaOne\Domain\Team;
 
+
 function menu(): void
 {
     $opcao = null;
@@ -85,7 +86,7 @@ function inserirEquipe()
             $qtdWordTitlesValid = false;
         }
 
-        $paisId = $repositorio->localizandoPais($countryName);
+        $paisId = $repositorio->pegaIdDoPais($countryName);
 
         if (is_null($paisId)) {
             echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar a equipe." . PHP_EOL . 
@@ -144,6 +145,14 @@ function inserirPiloto()
         }
     }
 
+    $equipeId = $repositorio->pegaIdDaEquipe($nomeEquipe);
+
+    if (is_null($equipeId)) {
+        echo "Esta equipe não está cadastrado ainda, você precisa inseri-la em Inserir Equipe para depois adicionar o piloto." . PHP_EOL . 
+        "Após adicionar, volte e insira novamente o piloto \n\n";
+        return;
+    }
+
     $nascimentoValido = false;
     while ($nascimentoValido == false) {
         $nascimento = readline('Qual a data de nascimento? (YYYY-MM-DD)');
@@ -166,7 +175,7 @@ function inserirPiloto()
         }
     }
 
-    $paisId = $repositorio->localizandoPais($countryName);
+    $paisId = $repositorio->pegaIdDoPais($countryName);
 
     if (is_null($paisId)) {
         echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar o piloto." . PHP_EOL . 
@@ -176,7 +185,7 @@ function inserirPiloto()
 
     $date = \DateTimeImmutable::createFromFormat('Y-m-d', $nascimento);
     try {
-        $piloto = new Driver($nomePiloto, $nomeEquipe, $date, $countryName);
+        $piloto = new Driver($nomePiloto, $equipeId, $date, $equipeId);
         $repositorio->armazenaDriver($piloto);
         echo "piloto $nomePiloto inserido com sucesso!" . PHP_EOL;
     } catch (InvalidArgumentException $exception) {
@@ -199,12 +208,21 @@ function inserirPais()
             echo 'País inválido' . PHP_EOL;
             $countryValid = false;
         }
+
+        $nomePais = $repositorio->buscaPais($countryName);
+
+        if (is_string($nomePais)) {
+            echo "Este país já existe, tente outro. " . PHP_EOL;
+            $countryValid = false;
+        } elseif (is_null($nomePais)) {
+            $countryValid = true;
+        }
     }
 
     try {
         $country = new Country($countryName);
         $repositorio->armazenaCountry($country);
-        echo "país $nomePiloto inserido com sucesso!" . PHP_EOL;
+        echo "País $countryName inserido com sucesso!" . PHP_EOL;
     } catch (InvalidArgumentException $exception) {
         echo $exception->getMessage() . PHP_EOL;
     }

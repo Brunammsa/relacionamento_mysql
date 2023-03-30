@@ -26,7 +26,7 @@ class RepositorySql
         $sucess = $statemend->execute([
             ':name' => $driver->getName(),
             ':team_id' => $driver->getTeamId(),
-            ':birthDate' => $driver->getBirthDate(),
+            ':birthDate' => $driver->getBirthDate()->format('Y-m-d'),
             ':country_id' => $driver->getCountryId()
         ]);
     }
@@ -56,7 +56,7 @@ class RepositorySql
         $insertQuery = 'INSERT INTO country (name) VALUES (:country)';
         $statemend = $this->connection->prepare($insertQuery);
         $sucess = $statemend->execute([
-            ':name' => $country->getName(),
+            ':country' => $country->getName(),
         ]);
     }
 
@@ -75,9 +75,39 @@ class RepositorySql
         return $listaPilotos;
     }
 
-    public function localizandoPais($pais): ?int
+    public function pegaIdDoPais($pais): ?int
     {
         $sqlQuery = "SELECT id FROM country WHERE name ='$pais'";
+        $statement = $this->connection->query($sqlQuery);
+        $sucess = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (is_array($sucess)) {
+            $idDoPais = $sucess['id'];
+        } else {
+            $idDoPais = null;
+        }
+
+        return $idDoPais;
+    }
+
+    public function buscaPais($pais): ?string
+    {
+        $sqlQuery = "SELECT * FROM country WHERE name ='$pais'";
+        $statement = $this->connection->query($sqlQuery);
+        $sucess = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (is_array($sucess)) {
+            $nomeDoPais = $sucess['name'];
+        } else {
+            $nomeDoPais = null;
+        }
+    
+        return $nomeDoPais;
+    }
+
+    public function pegaIdDaEquipe($equipe): ?int
+    {
+        $sqlQuery = "SELECT id FROM team WHERE name ='$equipe'";
         $statement = $this->connection->query($sqlQuery);
         $sucess = $statement->fetch(PDO::FETCH_ASSOC);
 
