@@ -27,7 +27,7 @@ class RepositorySql
             ':name' => $driver->getName(),
             ':team_id' => $driver->getTeamId(),
             ':birthDate' => $driver->getBirthDate(),
-            ':country_id' => $driver->country_id()
+            ':country_id' => $driver->getCountryId()
         ]);
     }
 
@@ -81,7 +81,11 @@ class RepositorySql
         $statement = $this->connection->query($sqlQuery);
         $sucess = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $idDoPais = $sucess['id'];
+        if (is_array($sucess)) {
+            $idDoPais = $sucess['id'];
+        } else {
+            $idDoPais = null;
+        }
 
         return $idDoPais;
     }

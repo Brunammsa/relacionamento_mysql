@@ -58,7 +58,7 @@ function inserirEquipe()
         $qtdEmployees = readline('Quantos funcionários a equipe possue? ');
         $qtdEmployeesValid = true;
 
-        if (strlen($qtdEmployees) == 0) {
+        if (!is_numeric($qtdEmployees)) {
             echo 'número de funcionários inválido' . PHP_EOL;
             $qtdEmployeesValid = false;
         }
@@ -84,11 +84,14 @@ function inserirEquipe()
             echo 'país inválido' . PHP_EOL;
             $qtdWordTitlesValid = false;
         }
-        if (!($paisId = $repositorio->localizandoPais($countryName))) {
-            echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar a equipe.
-            \nApós adicionar, volte e insira novamente a equipe" . PHP_EOL;
+
+        $paisId = $repositorio->localizandoPais($countryName);
+
+        if (is_null($paisId)) {
+            echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar a equipe." . PHP_EOL . 
+            "Após adicionar, volte e insira novamente a equipe \n\n";
             return;
-        } $paisId = $repositorio->localizandoPais($countryName);
+        }
     }
 
     $qtdWordTitlesValid = false;
@@ -96,7 +99,7 @@ function inserirEquipe()
         $qtdWordTitles = readline('Quantos titulos mundiais a equipe possue? ');
         $qtdWordTitlesValid = true;
 
-        if (strlen($qtdWordTitles) == 0) {
+        if (!is_numeric($qtdWordTitles)) {
             echo 'quantidade inválida' . PHP_EOL;
             $qtdWordTitlesValid = false;
         }
@@ -146,8 +149,8 @@ function inserirPiloto()
         $nascimento = readline('Qual a data de nascimento? (YYYY-MM-DD)');
         $nascimentoValido = true;
 
-        if (strlen($nascimento) == 0) {
-            echo 'Nome inválido' . PHP_EOL;
+        if (strlen($nascimento) < 10 || strlen($nascimento) > 10 ) {
+            echo 'Data de nascimento inválida, por favor verifique o formato e a quantidade de caracteres' . PHP_EOL;
             $nascimentoValido = false;
         }
     }
@@ -161,6 +164,14 @@ function inserirPiloto()
             echo 'País inválido' . PHP_EOL;
             $countryValid = false;
         }
+    }
+
+    $paisId = $repositorio->localizandoPais($countryName);
+
+    if (is_null($paisId)) {
+        echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar o piloto." . PHP_EOL . 
+        "Após adicionar, volte e insira novamente o piloto \n\n";
+        return;
     }
 
     $date = \DateTimeImmutable::createFromFormat('Y-m-d', $nascimento);
