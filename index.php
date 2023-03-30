@@ -84,13 +84,11 @@ function inserirEquipe()
             echo 'país inválido' . PHP_EOL;
             $qtdWordTitlesValid = false;
         }
-
-        $paisId = $repositorio->localizandoPais($countryName);
-        if (is_null($paisId)) {
-            echo "Este país não está cadastrado ainda, por favor, volte ao menu e selecione a opção Inserir País.
-            \nApós adicionar, volte e insira novamente a equipe";
-            $countryValid = false;
-        }
+        if (!($paisId = $repositorio->localizandoPais($countryName))) {
+            echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar a equipe.
+            \nApós adicionar, volte e insira novamente a equipe" . PHP_EOL;
+            return;
+        } $paisId = $repositorio->localizandoPais($countryName);
     }
 
     $qtdWordTitlesValid = false;

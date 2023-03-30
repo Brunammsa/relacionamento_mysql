@@ -15,7 +15,7 @@ class RepositorySql
 
     public function armazenaDriver(Driver $driver): void
     {
-        $insertQuery = 'INSERT INTO driver (name, team_id, birthDate, country) VALUES (
+        $insertQuery = 'INSERT INTO driver (name, team_id, birthDate, country_id) VALUES (
             :name,
             :team_id,
             :birthDate,
@@ -33,7 +33,7 @@ class RepositorySql
 
     public function armazenaTeam(Team $team): void
     {
-        $insertQuery = 'INSERT INTO team (name, qtdEmployees, director, country, qtdWordTitles) VALUES (
+        $insertQuery = 'INSERT INTO team (name, qtdEmployees, director, country_id, qtdWorldTitles) VALUES (
             :name, 
             :qtdEmployees,
             :director,
