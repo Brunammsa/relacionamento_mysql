@@ -86,12 +86,10 @@ class RepositorySql
         $sucess = $statement->fetch(PDO::FETCH_ASSOC);
 
         if (is_array($sucess)) {
-            $idDoPais = $sucess['id'];
-        } else {
-            $idDoPais = null;
+            return $sucess['id'];
         }
 
-        return $idDoPais;
+        return null;
     }
 
     public function buscaPais($pais): ?string
@@ -100,10 +98,9 @@ class RepositorySql
         $statement = $this->connection->query($sqlQuery);
         $sucess = $statement->fetch(PDO::FETCH_ASSOC);
 
+        $nomeDoPais = null;
         if (is_array($sucess)) {
             $nomeDoPais = $sucess['name'];
-        } else {
-            $nomeDoPais = null;
         }
     
         return $nomeDoPais;
@@ -116,12 +113,10 @@ class RepositorySql
         $sucess = $statement->fetch(PDO::FETCH_ASSOC);
 
         if (is_array($sucess)) {
-            $idDoPais = $sucess['id'];
-        } else {
-            $idDoPais = null;
+            return $sucess['id'];
         }
 
-        return $idDoPais;
+        return null;
     }
 
 }
