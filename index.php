@@ -89,9 +89,8 @@ function inserirEquipe()
         $paisId = $repositorio->pegaIdDoPais($countryName);
 
         if (is_null($paisId)) {
-            echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar a equipe." . PHP_EOL . 
-            "Após adicionar, volte e insira novamente a equipe \n\n";
-            return;
+            $country = new Country($countryName);
+            $paisId = $repositorio->armazenaCountry($country);
         }
     }
 
@@ -178,14 +177,13 @@ function inserirPiloto()
     $paisId = $repositorio->pegaIdDoPais($countryName);
 
     if (is_null($paisId)) {
-        echo "Este país não está cadastrado ainda, você precisa inseri-lo em Inserir País para depois adicionar o piloto." . PHP_EOL . 
-        "Após adicionar, volte e insira novamente o piloto \n\n";
-        return;
+        $country = new Country($countryName);
+        $paisId->armazenaCountry($country);
     }
 
     $date = \DateTimeImmutable::createFromFormat('Y-m-d', $nascimento);
     try {
-        $piloto = new Driver($nomePiloto, $equipeId, $date, $equipeId);
+        $piloto = new Driver($nomePiloto, $equipeId, $date, $paisId);
         $repositorio->armazenaDriver($piloto);
         echo "piloto $nomePiloto inserido com sucesso!" . PHP_EOL;
     } catch (InvalidArgumentException $exception) {

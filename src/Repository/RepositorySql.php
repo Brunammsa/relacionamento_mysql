@@ -51,13 +51,17 @@ class RepositorySql
         ]);
     }
 
-    public function armazenaCountry(Country $country): void
+    public function armazenaCountry(Country $country): int
     {
         $insertQuery = 'INSERT INTO country (name) VALUES (:country)';
         $statemend = $this->connection->prepare($insertQuery);
         $sucess = $statemend->execute([
             ':country' => $country->getName(),
         ]);
+
+        $lastId = $this->connection->lastInsertId();
+
+        return (int)$lastId;
     }
 
     public function listaDePilotos(): array
