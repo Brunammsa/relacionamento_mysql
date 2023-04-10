@@ -7,6 +7,9 @@ use Bruna\FormulaOne\Repository\RepositorySql;
 use Bruna\FormulaOne\Domain\Country;
 use Bruna\FormulaOne\Domain\Driver;
 use Bruna\FormulaOne\Domain\Team;
+use Brunammsa\Inputzvei\InputCpf;
+use Brunammsa\Inputzvei\InputText;
+use Brunammsa\Inputzvei\InputNumber;
 
 
 function menu(): void
@@ -42,74 +45,33 @@ function inserirEquipe()
 {
     $pdo = ConnectionCreator::createConnection();
     $repositorio = new RepositorySql($pdo);
-    $nomeValido = false;
 
-    while ($nomeValido == false) {
-        $nomeEquipe = readline(('Qual o nome da equipe? '));
-        $nomeValido = true;
+    $inputzVei = new InputText('Qual o nome da equipe? ');
+    $teamAnswer = $inputzVei->ask();
 
-        if (strlen($nomeEquipe) == 0) {
-            echo 'Nome inválido' . PHP_EOL;
-            $nomeValido = false;
-        }
-    }
+    $inputzVei = new InputNumber('Quantos funcionários a equipe possue? ');
+    $qtdEmployeesAnswer = $inputzVei->ask();
 
-    $qtdEmployeesValid = false;
-    while ($qtdEmployeesValid == false) {
-        $qtdEmployees = readline('Quantos funcionários a equipe possue? ');
-        $qtdEmployeesValid = true;
+    $inputzVei = new InputText('Qual o nome do(a) chefe de equipe? ');
+    $chefAnswer = $inputzVei->ask();
 
-        if (!is_numeric($qtdEmployees)) {
-            echo 'número de funcionários inválido' . PHP_EOL;
-            $qtdEmployeesValid = false;
-        }
-    }
-
-    $directorValid = false;
-    while ($directorValid == false) {
-        $nomeDiretor = readline('Qual o nome do(a) chefe de equipe? ');
-        $directorValid = true;
-
-        if (strlen($nomeDiretor) == 0) {
-            echo 'Nome inválido' . PHP_EOL;
-            $directorValid = false;
-        }
-    }
+    $inputzVei = new InputText('Qual o país de origem? ');
+    $countryAnswer = $inputzVei->ask();
     
-    $countryValid = false;
-    while ($countryValid == false) {
-        $countryName = readline('Qual o país de origem? ');
-        $countryValid = true;
+    $paisId = $repositorio->pegaIdDoPais($countryAnswer);
 
-        if (strlen($countryName) == 0) {
-            echo 'país inválido' . PHP_EOL;
-            $qtdWordTitlesValid = false;
-        }
-
-        $paisId = $repositorio->pegaIdDoPais($countryName);
-
-        if (is_null($paisId)) {
-            $country = new Country($countryName);
-            $paisId = $repositorio->armazenaCountry($country);
-        }
+    if (is_null($paisId)) {
+        $country = new Country($countryAnswer);
+        $paisId = $repositorio->armazenaCountry($country);
     }
 
-    $qtdWordTitlesValid = false;
-    while ($qtdWordTitlesValid == false) {
-        $qtdWordTitles = readline('Quantos titulos mundiais a equipe possue? ');
-        $qtdWordTitlesValid = true;
-
-        if (!is_numeric($qtdWordTitles)) {
-            echo 'quantidade inválida' . PHP_EOL;
-            $qtdWordTitlesValid = false;
-        }
-    }
-
+    $inputzVei = new InputNumber('Quantos titulos mundiais a equipe possue? ');
+    $qtdWorldTitlesAnswer = $inputzVei->ask();
 
     try {
-        $equipe = new Team($nomeEquipe, $qtdEmployees, $nomeDiretor, $paisId, $qtdWordTitles);
+        $equipe = new Team($teamAnswer, $qtdEmployeesAnswer, $chefAnswer, $paisId, $qtdWorldTitlesAnswer);
         $repositorio->armazenaTeam($equipe);
-        echo "equipe $nomeEquipe inserida com sucesso!" . PHP_EOL;
+        echo "equipe $teamAnswer inserida com sucesso!" . PHP_EOL;
     } catch (InvalidArgumentException $exception) {
         echo $exception->getMessage() . PHP_EOL;
     }
@@ -121,71 +83,49 @@ function inserirPiloto()
 {
     $pdo = ConnectionCreator::createConnection();
     $repositorio = new RepositorySql($pdo);
-    $nomeValido = false;
 
-    while ($nomeValido == false) {
-        $nomePiloto = readline('Qual o nome do piloto? ');
-        $nomeValido = true;
+    $inputzVei = new InputText('Qual o nome do piloto? ');
+    $driverAnswer = $inputzVei->ask();
 
-        if (strlen($nomePiloto) == 0) {
-            echo 'Nome inválido' . PHP_EOL;
-            $nomeValido = false;
-        }
-    }
+    $inputzVei = new InputText('Qual o nome da equipe? ');
+    $teamAnswer = $inputzVei->ask();
 
-    $nomeValido = false;
-    while ($nomeValido == false) {
-        $nomeEquipe = readline('Qual o nome da equipe? ');
-        $nomeValido = true;
 
-        if (strlen($nomeEquipe) == 0) {
-            echo 'Nome inválido' . PHP_EOL;
-            $nomeValido = false;
-        }
-    }
+    $teamId = $repositorio->pegaIdDaEquipe($teamAnswer);
 
-    $equipeId = $repositorio->pegaIdDaEquipe($nomeEquipe);
-
-    if (is_null($equipeId)) {
-        echo "Esta equipe não está cadastrado ainda, você precisa inseri-la em Inserir Equipe para depois adicionar o piloto." . PHP_EOL . 
-        "Após adicionar, volte e insira novamente o piloto \n\n";
+    if (is_null($teamId)) {
+        echo "a equipe $teamAnswer não está cadastrado ainda, você precisa inseri-la primeiro depois adicionar o piloto." . PHP_EOL;
         return;
     }
 
-    $nascimentoValido = false;
-    while ($nascimentoValido == false) {
-        $nascimento = readline('Qual a data de nascimento? (YYYY-MM-DD)');
-        $nascimentoValido = true;
+    $inputValid = false;
 
-        if (strlen($nascimento) < 10 || strlen($nascimento) > 10 ) {
+    while(!$inputValid) {
+        $inputzVei = new InputText('Qual a data de nascimento? (YYYY-MM-DD) ');
+        $birthDateAnswer = $inputzVei->ask();
+    
+        if (strlen($birthDateAnswer) === 10) {
+            $inputValid = true;
+        } else {
             echo 'Data de nascimento inválida, por favor verifique o formato e a quantidade de caracteres' . PHP_EOL;
-            $nascimentoValido = false;
         }
     }
 
-    $countryValid = false;
-    while ($countryValid == false) {
-        $countryName = readline('Qual o país de origem? ');
-        $countryValid = true;
-
-        if (strlen($countryName) == 0) {
-            echo 'País inválido' . PHP_EOL;
-            $countryValid = false;
-        }
-    }
-
-    $paisId = $repositorio->pegaIdDoPais($countryName);
+    $inputzVei = new InputText('Qual o país de origem? ');
+    $countryAnswer = $inputzVei->ask();
+    
+    $paisId = $repositorio->pegaIdDoPais($countryAnswer);
 
     if (is_null($paisId)) {
-        $country = new Country($countryName);
-        $paisId->armazenaCountry($country);
+        $country = new Country($countryAnswer);
+        $paisId = $repositorio->armazenaCountry($country);
     }
 
-    $date = \DateTimeImmutable::createFromFormat('Y-m-d', $nascimento);
+    $date = \DateTimeImmutable::createFromFormat('Y-m-d', $birthDateAnswer);
     try {
-        $piloto = new Driver($nomePiloto, $equipeId, $date, $paisId);
-        $repositorio->armazenaDriver($piloto);
-        echo "piloto $nomePiloto inserido com sucesso!" . PHP_EOL;
+        $driver = new Driver($driverAnswer, $teamAnswer, $date, $paisId);
+        $repositorio->armazenaDriver($driver);
+        echo "piloto $driverAnswer inserido com sucesso!" . PHP_EOL;
     } catch (InvalidArgumentException $exception) {
         echo $exception->getMessage() . PHP_EOL;
     }
@@ -196,31 +136,27 @@ function inserirPais()
 {
     $pdo = ConnectionCreator::createConnection();
     $repositorio = new RepositorySql($pdo);
-    $countryValid = false;
 
-    while ($countryValid == false) {
-        $countryName = readline('Qual país gostaria de adicionar? ');
-        $countryValid = true;
+    $inputValid = false;
 
-        if (strlen($countryName) == 0) {
-            echo 'País inválido' . PHP_EOL;
-            $countryValid = false;
-        }
-
-        $nomePais = $repositorio->buscaPais($countryName);
-
-        if (is_string($nomePais)) {
+    while (!$inputValid) {
+        $inputzVei = new InputText('Qual país gostaria de adicionar? ');
+        $countryAnswer = $inputzVei->ask();
+    
+        $country = $repositorio->buscaPais($countryAnswer);
+    
+        if (is_string($country)) {
             echo "Este país já existe, tente outro. " . PHP_EOL;
-            $countryValid = false;
-        } elseif (is_null($nomePais)) {
-            $countryValid = true;
+            $inputValid = false;
+        } elseif (is_null($country)) {
+            $inputValid = true;
         }
     }
 
     try {
-        $country = new Country($countryName);
+        $country = new Country($countryAnswer);
         $repositorio->armazenaCountry($country);
-        echo "País $countryName inserido com sucesso!" . PHP_EOL;
+        echo "País $countryAnswer inserido com sucesso!" . PHP_EOL;
     } catch (InvalidArgumentException $exception) {
         echo $exception->getMessage() . PHP_EOL;
     }

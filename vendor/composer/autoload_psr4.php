@@ -7,5 +7,9 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Component\\Dotenv\\' => array($vendorDir . '/symfony/dotenv'),
+    'Seld\\CliPrompt\\' => array($vendorDir . '/seld/cli-prompt/src'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
+    'League\\CLImate\\' => array($vendorDir . '/league/climate/src'),
+    'Brunammsa\\Inputzvei\\' => array($vendorDir . '/brunammsa/inputzvei/src'),
     'Bruna\\FormulaOne\\' => array($baseDir . '/src'),
 );

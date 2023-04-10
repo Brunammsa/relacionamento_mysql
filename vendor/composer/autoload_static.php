@@ -10,9 +10,19 @@ class ComposerStaticInit3bc84851fc9e536f40bfcd579ea090e4
         'S' => 
         array (
             'Symfony\\Component\\Dotenv\\' => 25,
+            'Seld\\CliPrompt\\' => 15,
+        ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+        ),
+        'L' => 
+        array (
+            'League\\CLImate\\' => 15,
         ),
         'B' => 
         array (
+            'Brunammsa\\Inputzvei\\' => 20,
             'Bruna\\FormulaOne\\' => 17,
         ),
     );
@@ -21,6 +31,22 @@ class ComposerStaticInit3bc84851fc9e536f40bfcd579ea090e4
         'Symfony\\Component\\Dotenv\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/dotenv',
+        ),
+        'Seld\\CliPrompt\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seld/cli-prompt/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/src',
+        ),
+        'League\\CLImate\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/climate/src',
+        ),
+        'Brunammsa\\Inputzvei\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brunammsa/inputzvei/src',
         ),
         'Bruna\\FormulaOne\\' => 
         array (
