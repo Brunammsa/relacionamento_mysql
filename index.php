@@ -116,6 +116,7 @@ function inserirPiloto()
     
     $paisId = $repositorio->pegaIdDoPais($countryAnswer);
 
+
     if (is_null($paisId)) {
         $country = new Country($countryAnswer);
         $paisId = $repositorio->armazenaCountry($country);
@@ -123,7 +124,7 @@ function inserirPiloto()
 
     $date = \DateTimeImmutable::createFromFormat('Y-m-d', $birthDateAnswer);
     try {
-        $driver = new Driver($driverAnswer, $teamAnswer, $date, $paisId);
+        $driver = new Driver($driverAnswer, $teamId, $date, $paisId);
         $repositorio->armazenaDriver($driver);
         echo "piloto $driverAnswer inserido com sucesso!" . PHP_EOL;
     } catch (InvalidArgumentException $exception) {

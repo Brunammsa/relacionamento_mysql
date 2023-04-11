@@ -55,9 +55,7 @@ class RepositorySql
     {
         $insertQuery = 'INSERT INTO country (name) VALUES (:country)';
         $statemend = $this->connection->prepare($insertQuery);
-        $sucess = $statemend->execute([
-            ':country' => $country->getName(),
-        ]);
+        $sucess = $statemend->execute([':country' => $country->getName(),]);
 
         $lastId = $this->connection->lastInsertId();
 
